@@ -2,11 +2,30 @@
   "name": "console-kit",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eskiu/console-kit.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "scripts": {
+    "build": "tsup ./src/index.ts --format cjs,esm --dts --minify",
+    "tscheck": "tsc --noEmit",
+    "lint": "eslint --ext .ts ./src",
+    "format": "prettier --write \"src/**/*.ts\""
+  },
+  "keywords": [
+    "console",
+    "log",
+    "logger"
+  ],
+  "author": "eskiu",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint-config-eskiu": "^1.0.1",
+    "prettier": "^3.0.3",
+    "tsup": "^7.2.0",
+    "typescript": "^5.2.2"
+  }
 }
