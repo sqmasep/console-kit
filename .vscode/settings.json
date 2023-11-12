@@ -1,0 +1,45 @@
+{
+  // Typescript
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+
+  // Prettier
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+
+  // Better comments
+  "better-comments.tags": [
+    {
+      "tag": "TODO",
+      "color": "#00FFF2",
+      "backgroundColor": "#001C1B"
+    },
+    { "tag": "WARN", "color": "#FF8C00", "backgroundColor": "#1C0F00" },
+    { "tag": "FIXME", "color": "#F1411A", "backgroundColor": "#1C0803" },
+    {
+      "tag": "DANGER [SECURITY]",
+      "color": "#e55",
+      "bold": true,
+      "backgroundColor": "#1C0404"
+    },
+    { "tag": "DANGER", "color": "#e55", "backgroundColor": "#1C0404" },
+    {
+      "tag": "INFO",
+      "color": "#3498DB",
+      "italic": true,
+      "backgroundColor": "#07131C"
+    },
+    { "tag": "//", "color": "#474747", "strikethrough": true }
+  ],
+  "todohighlight.isEnable": true,
+  "todohighlight.isCaseSensitive": true,
+  "todohighlight.defaultStyle": { "borderRadius": "4px" },
+  "todohighlight.keywords": [
+    { "text": "[TS]", "color": "#A7D3FF", "backgroundColor": "#25415C" },
+    { "text": "[REFACTOR]", "color": "#e55", "backgroundColor": "#0000" },
+    { "text": "[A11Y]", "color": "#5c5", "backgroundColor": "#0000" }
+  ]
+}
