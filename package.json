@@ -10,6 +10,7 @@
     "url": "https://github.com/eskiu/console-kit.git"
   },
   "scripts": {
+    "dev": "nodemon ./src/index.ts",
     "build": "tsup ./src/index.ts --format cjs,esm --dts --minify",
     "tscheck": "tsc --noEmit",
     "lint": "eslint --ext .ts ./src",
@@ -23,9 +24,14 @@
   "author": "eskiu",
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "^20.9.0",
     "eslint-config-eskiu": "^1.0.1",
     "prettier": "^3.0.3",
+    "ts-node": "^10.9.1",
     "tsup": "^7.2.0",
     "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "chalk": "4.1.2"
   }
 }
