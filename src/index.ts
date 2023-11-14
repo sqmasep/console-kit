@@ -5,7 +5,15 @@ import { consolekit } from "./config";
 // consolekit.log("before .timestamp.log");
 // consolekit.timestamp.log("after .timestamp.log");
 // consolekit.log("index.ts");
-consolekit;
+
+const dbCall = consolekit.startTime();
+(async () => {
+  await new Promise(resolve => {
+    setTimeout(resolve, 1000);
+  }).catch(() => {});
+
+  dbCall.endTime(t => `db call took ${t}ms`);
+})();
 
 console.log(path.basename(__filename));
 

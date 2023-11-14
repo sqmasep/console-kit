@@ -3,6 +3,7 @@ import type {
   ConsoleKitOptions,
   ConsoleKitAPIOptions,
   LiteralUnion,
+  ConsoleKitMessage,
 } from "./types";
 
 export class ConsoleKit<const TOptions extends ConsoleKitOptions> {
@@ -64,7 +65,6 @@ export class ConsoleKit<const TOptions extends ConsoleKitOptions> {
 
   endGroup() {
     this._group = null;
-
     return this._logMethods;
   }
 
@@ -72,11 +72,25 @@ export class ConsoleKit<const TOptions extends ConsoleKitOptions> {
     return this._group;
   }
 
-  log(message: unknown) {
-    // console.log(message, "hasTimestamp?", this._hasTimestamp);
+  log(message: ConsoleKitMessage) {
+    console.log(message);
     this._reset();
 
     return this;
+  }
+
+  startTime(message?: ConsoleKitMessage) {
+    const start = Date.now();
+
+    if (message !== undefined) console.log(message);
+
+    return {
+      endTime: (cb: (timeDiff: number) => ConsoleKitMessage): number => {
+        const diff = Date.now() - start;
+        this.log(cb(diff));
+        return diff;
+      },
+    };
   }
 
   private _logMethods = {

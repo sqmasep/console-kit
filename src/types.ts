@@ -1,6 +1,8 @@
 /* eslint-disable-next-line @typescript-eslint/ban-types */
 export type LiteralUnion<T> = T | (string & {});
 
+export type ConsoleKitMessage = string;
+
 export interface ConsoleKitOptions {
   timestamp: ConsoleKitTimestampOptions;
   tags: Record<ConsoleKitTag["name"], ConsoleKitTagOptions>;

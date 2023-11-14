@@ -10,6 +10,7 @@ module.exports = {
   plugins: [],
   rules: {
     // same as eslint-config-eskiu/ts, but without the boolean prefixes rule
+    "@typescript-eslint/no-floating-promises": "off",
     "@typescript-eslint/naming-convention": [
       "error",
       {
