@@ -11,7 +11,7 @@ declare module "./types" {
   }
 
   // interface ConsoleKitGroup {
-  //   name: "database" | "ntmok";
+  //   name: "database" | "soldProduct";
   // }
 }
 

@@ -1,6 +1,6 @@
 // import chalk from "chalk";
 import path from "path";
-import { consolekit } from "./config";
+import { consolekit } from "./client";
 
 // consolekit.log("before .timestamp.log");
 // consolekit.timestamp.log("after .timestamp.log");

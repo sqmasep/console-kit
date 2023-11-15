@@ -2,9 +2,9 @@ import { defaultValues } from "./defaultValues";
 import type {
   ConsoleKitOptions,
   ConsoleKitAPIOptions,
-  LiteralUnion,
   ConsoleKitMessage,
 } from "./types";
+import type { LiteralUnion } from "./utils/types";
 
 export class ConsoleKit<const TOptions extends ConsoleKitOptions> {
   private _options: Partial<TOptions> = {};
@@ -23,6 +23,7 @@ export class ConsoleKit<const TOptions extends ConsoleKitOptions> {
 
     return {
       tag: this.tag.bind(this),
+      startTime: this.startTime.bind(this),
       ...this._logMethods,
     };
   }
@@ -91,6 +92,14 @@ export class ConsoleKit<const TOptions extends ConsoleKitOptions> {
         return diff;
       },
     };
+  }
+
+  private _groupBuilder() {}
+
+  private _timestampBuilder() {
+    return this._hasTimestamp
+      ? `[${new Date().toLocaleString(this._options.timestamp?.format)}] `
+      : "";
   }
 
   private _logMethods = {

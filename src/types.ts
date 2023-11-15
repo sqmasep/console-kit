@@ -1,5 +1,4 @@
-/* eslint-disable-next-line @typescript-eslint/ban-types */
-export type LiteralUnion<T> = T | (string & {});
+import type { ConfigOverride } from "./utils/types";
 
 export type ConsoleKitMessage = string;
 
@@ -12,13 +11,10 @@ export interface ConsoleKitOptions {
   >;
 }
 
-interface AugmentationName {
-  name: string;
-}
+export interface ConsoleKitTag extends ConfigOverride<{ name: string }> {}
+export interface ConsoleKitGroup extends ConfigOverride<{ name: string }> {}
 
-export interface ConsoleKitTag extends AugmentationName {}
-export interface ConsoleKitGroup extends AugmentationName {}
-
+// Options
 export interface ConsoleKitTagOptions {
   color?: string;
   backgroundColor?: string;
@@ -47,7 +43,7 @@ export interface ConsoleKitOptionsLevel {
 
 // for module augmentation
 export interface ConsoleKitAPIOptions
-  extends Partial<{
+  extends ConfigOverride<{
     useStrictTags: boolean;
     useStrictGroups: boolean;
   }> {}

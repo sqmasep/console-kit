@@ -1,6 +1,7 @@
 import type { ConsoleKitOptions } from "./types";
+import type { Except } from "./utils/types";
 
-export const defaultValues: Pick<ConsoleKitOptions, "timestamp" | "levels"> = {
+export const defaultValues: Except<ConsoleKitOptions, "tags" | "groups"> = {
   levels: {
     error: {},
   },
