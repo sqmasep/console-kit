@@ -3,6 +3,9 @@ import type { ConfigOverride } from "./utils/types";
 export type ConsoleKitMessage = string;
 
 export interface ConsoleKitOptions {
+  filename: {
+    isEnabled?: boolean;
+  };
   timestamp: ConsoleKitTimestampOptions;
   tags: Record<ConsoleKitTag["name"], ConsoleKitTagOptions>;
   groups: Record<ConsoleKitGroup["name"], ConsoleKitGroupOptions>;

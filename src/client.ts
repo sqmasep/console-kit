@@ -36,15 +36,3 @@ export const consolekit = new ConsoleKit({
     error: {},
   },
 });
-
-consolekit.startGroup("soldProduct");
-consolekit.log("ee");
-
-if (consolekit.hasGroup) {
-  console.log(consolekit.getGroup());
-  consolekit.tag("epic");
-  console.log(consolekit.getTag());
-}
-consolekit.endGroup();
-
-consolekit.timestamp.tag("ooo").log("");

@@ -1,3 +1,4 @@
+import path from "path";
 import { defaultValues } from "./defaultValues";
 import type {
   ConsoleKitOptions,
@@ -5,10 +6,14 @@ import type {
   ConsoleKitMessage,
 } from "./types";
 import type { LiteralUnion } from "./utils/types";
+import chalk from "chalk";
 
 export class ConsoleKit<const TOptions extends ConsoleKitOptions> {
   private _options: Partial<TOptions> = {};
+
   private _hasTimestamp = defaultValues.timestamp.isEnabled;
+  private _hasFilename = defaultValues.filename.isEnabled;
+
   private _tag: string | null = null;
   private _group: string | null = null;
 
@@ -24,8 +29,15 @@ export class ConsoleKit<const TOptions extends ConsoleKitOptions> {
     return {
       tag: this.tag.bind(this),
       startTime: this.startTime.bind(this),
+      filename: this.filename,
       ...this._logMethods,
     };
+  }
+
+  get filename() {
+    this._hasFilename = true;
+    // FIXME temporary return `this`
+    return this;
   }
 
   get hasGroup() {
@@ -74,7 +86,9 @@ export class ConsoleKit<const TOptions extends ConsoleKitOptions> {
   }
 
   log(message: ConsoleKitMessage) {
-    console.log(message);
+    console.log(
+      `${this._timestampBuilder()}${message} ${this._filenameBuilder()}`,
+    );
     this._reset();
 
     return this;
@@ -83,7 +97,7 @@ export class ConsoleKit<const TOptions extends ConsoleKitOptions> {
   startTime(message?: ConsoleKitMessage) {
     const start = Date.now();
 
-    if (message !== undefined) console.log(message);
+    if (message !== undefined) console.log(this._timestampBuilder(), message);
 
     return {
       endTime: (cb: (timeDiff: number) => ConsoleKitMessage): number => {
@@ -94,12 +108,19 @@ export class ConsoleKit<const TOptions extends ConsoleKitOptions> {
     };
   }
 
-  private _groupBuilder() {}
+  private _filenameBuilder() {
+    const filename = new Error().stack;
+    console.log(filename);
+    return "";
+    // return this._hasFilename ? `${chalk.gray.italic(`${filename}`)}` : "";
+  }
+
+  private _groupBuilder() {
+    return this.hasGroup ? "║" : "";
+  }
 
   private _timestampBuilder() {
-    return this._hasTimestamp
-      ? `[${new Date().toLocaleString(this._options.timestamp?.format)}] `
-      : "";
+    return this._hasTimestamp ? `[${new Date().toLocaleString("en")}] ` : "";
   }
 
   private _logMethods = {
@@ -107,7 +128,10 @@ export class ConsoleKit<const TOptions extends ConsoleKitOptions> {
   };
 
   private _reset() {
-    this._hasTimestamp = this._options.timestamp?.isEnabled ?? false;
+    this._hasTimestamp =
+      this._options.timestamp?.isEnabled ?? defaultValues.timestamp.isEnabled;
+    this._hasFilename =
+      this._options.filename?.isEnabled ?? defaultValues.filename.isEnabled;
     this._tag = null;
   }
 }

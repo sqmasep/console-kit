@@ -6,6 +6,10 @@ export const defaultValues: Except<ConsoleKitOptions, "tags" | "groups"> = {
     error: {},
   },
 
+  filename: {
+    isEnabled: false,
+  },
+
   timestamp: {
     isEnabled: true,
     format: "YYYY-MM-DD HH:mm:ss",
