@@ -11,7 +11,7 @@ export const defaultValues: Except<ConsoleKitOptions, "tags" | "groups"> = {
   },
 
   timestamp: {
-    isEnabled: true,
+    isDefaultEnabled: true,
     format: "YYYY-MM-DD HH:mm:ss",
   },
 };

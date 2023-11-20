@@ -2,27 +2,35 @@ import { ConsoleKit } from "./lib";
 
 declare module "./types" {
   interface ConsoleKitAPIOptions {
-    useStrictTags: true;
+    useStrictTags: false;
     useStrictGroups: true;
   }
 
   interface ConsoleKitTag {
-    name: "ooo" | "epic";
+    names: "ooo" | "epic" | "shouldLog";
   }
 
+  // FIXME autocomplete only works when there is a module augmentation
+  // for ConsoleKitGroup for some reason
   // interface ConsoleKitGroup {
-  //   name: "database" | "soldProduct";
+  //   names: "database" | "soldProduct";
   // }
 }
 
 export const consolekit = new ConsoleKit({
+  // shouldLog: false,
   timestamp: {
-    isEnabled: true,
+    isDefaultEnabled: true,
     format: "YYYY-MM-DD HH:mm:ss",
   },
   tags: {
-    epic: { uppercase: true },
+    // shouldLog: true,
+    epic: {
+      // shouldLog: false,
+      uppercase: true,
+    },
     ooo: {
+      // shouldLog: false,
       uppercase: true,
     },
   },
@@ -34,5 +42,7 @@ export const consolekit = new ConsoleKit({
 
   levels: {
     error: {},
+    log: {},
+    info: {},
   },
 });

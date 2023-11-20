@@ -4,23 +4,27 @@ import type {
   ConsoleKitOptions,
   ConsoleKitAPIOptions,
   ConsoleKitMessage,
+  ShouldLogConfig,
 } from "./types";
 import type { LiteralUnion } from "./utils/types";
 import chalk from "chalk";
+import { timestampBuilder } from "./utils/timestamp";
 
 export class ConsoleKit<const TOptions extends ConsoleKitOptions> {
   private _options: Partial<TOptions> = {};
 
-  private _hasTimestamp = defaultValues.timestamp.isEnabled;
+  private _hasTimestamp = defaultValues.timestamp.isDefaultEnabled;
   private _hasFilename = defaultValues.filename.isEnabled;
 
+  // private _tag: keyof TOptions["tags"] | null = null;
   private _tag: string | null = null;
   private _group: string | null = null;
 
   constructor(options: Partial<TOptions> = {}) {
     this._options = options;
     this._hasTimestamp =
-      options.timestamp?.isEnabled ?? defaultValues.timestamp.isEnabled;
+      options.timestamp?.isDefaultEnabled ??
+      defaultValues.timestamp.isDefaultEnabled;
   }
 
   get timestamp() {
@@ -46,10 +50,11 @@ export class ConsoleKit<const TOptions extends ConsoleKitOptions> {
 
   tag(
     tag: ConsoleKitAPIOptions["useStrictTags"] extends false
-      ? LiteralUnion<keyof TOptions["tags"]>
+      ? LiteralUnion<Exclude<keyof TOptions["tags"], keyof ShouldLogConfig>>
       : // if undefined or true, use strict typing
-        keyof TOptions["tags"],
+        Exclude<keyof TOptions["tags"], keyof ShouldLogConfig>,
   ) {
+    // this._tag = tag as Exclude<keyof TOptions["tags"], keyof ShouldLogConfig>;
     this._tag = tag as string;
 
     return {
@@ -86,31 +91,65 @@ export class ConsoleKit<const TOptions extends ConsoleKitOptions> {
   }
 
   log(message: ConsoleKitMessage) {
-    console.log(
-      `${this._timestampBuilder()}${message} ${this._filenameBuilder()}`,
-    );
-    this._reset();
+    if (!this._checkShouldLog()) {
+      return this._reset();
+    }
 
-    return this;
+    console.log(`${timestampBuilder()}${message} ${this._filenameBuilder()}`);
+
+    return this._reset();
   }
 
   startTime(message?: ConsoleKitMessage) {
-    const start = Date.now();
+    const start = performance.now();
 
-    if (message !== undefined) console.log(this._timestampBuilder(), message);
+    if (message !== undefined) console.log(timestampBuilder(), message);
 
     return {
       endTime: (cb: (timeDiff: number) => ConsoleKitMessage): number => {
-        const diff = Date.now() - start;
+        const diff = performance.now() - start;
         this.log(cb(diff));
         return diff;
       },
     };
   }
 
+  // TODO basically it should return formatted colors i believe
+  // for example, if `level` is `log`, use this._options.levels.log
+  // and return the unicode according to the options
+  private _createLog(level: keyof TOptions["levels"]) {
+    return this;
+  }
+
+  private _checkShouldLog(): boolean {
+    // TODO i still havent done for `levels` btw
+    // TODO i may need to do two waterfalls
+    // if this._options.shouldLog is true, check if this._options.tags.shouldLog is true etc
+    // if it's false, return false
+
+    // other waterfall is in the opposite case, i guess:
+    // if this._options.shouldLog is false, check if there's any "true" at some point
+
+    if (this._options.shouldLog === true) return this._options.shouldLog;
+
+    if (this._options.tags?.shouldLog === true)
+      return this._options.tags.shouldLog;
+
+    // FIXME typecast is not safe and is a stupid solution
+    if (
+      this._tag !== null &&
+      this._options.tags?.[this._tag as "epic"]?.shouldLog !== undefined
+    ) {
+      return this._options.tags[this._tag as "epic"]
+        .shouldLog as unknown as boolean;
+    }
+
+    return true;
+  }
+
   private _filenameBuilder() {
     const filename = new Error().stack;
-    console.log(filename);
+    // console.log(filename);
     return "";
     // return this._hasFilename ? `${chalk.gray.italic(`${filename}`)}` : "";
   }
@@ -119,19 +158,18 @@ export class ConsoleKit<const TOptions extends ConsoleKitOptions> {
     return this.hasGroup ? "║" : "";
   }
 
-  private _timestampBuilder() {
-    return this._hasTimestamp ? `[${new Date().toLocaleString("en")}] ` : "";
-  }
-
   private _logMethods = {
     log: this.log.bind(this),
   };
 
   private _reset() {
     this._hasTimestamp =
-      this._options.timestamp?.isEnabled ?? defaultValues.timestamp.isEnabled;
+      this._options.timestamp?.isDefaultEnabled ??
+      defaultValues.timestamp.isDefaultEnabled;
     this._hasFilename =
       this._options.filename?.isEnabled ?? defaultValues.filename.isEnabled;
     this._tag = null;
+
+    return this;
   }
 }
