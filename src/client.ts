@@ -2,7 +2,7 @@ import { ConsoleKit } from "./lib";
 
 declare module "./types" {
   interface ConsoleKitAPIOptions {
-    useStrictTags: false;
+    useStrictTags: true;
     useStrictGroups: true;
   }
 
@@ -20,14 +20,16 @@ declare module "./types" {
 export const consolekit = new ConsoleKit({
   // shouldLog: false,
   timestamp: {
-    isDefaultEnabled: true,
+    isDefaultEnabled: false,
     format: "YYYY-MM-DD HH:mm:ss",
   },
   tags: {
     // shouldLog: true,
     epic: {
-      // shouldLog: false,
-      uppercase: true,
+      shouldLog: false,
+      color: "#f00",
+      backgroundColor: "#000",
+      uppercase: false,
     },
     ooo: {
       // shouldLog: false,
@@ -46,3 +48,5 @@ export const consolekit = new ConsoleKit({
     info: {},
   },
 });
+
+consolekit.tag("ooo");

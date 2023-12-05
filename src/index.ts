@@ -16,7 +16,7 @@ import { consolekit } from "./client";
 // })();
 
 consolekit.tag("epic").log("Hello");
-consolekit.tag("ooo").log("ooo");
+consolekit.timestamp.tag("ooo").log("ooo");
 
 // console.log(chalk.hex("#00fff2").bgHex("#001c1b")("this is a test"));
 // console.log(chalk.hex("#FF8C00").bgHex("#1C0F00")("warn!"));

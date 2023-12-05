@@ -5,6 +5,7 @@ import type {
   ConsoleKitAPIOptions,
   ConsoleKitMessage,
   ShouldLogConfig,
+  ConsoleKitTagOptions,
 } from "./types";
 import type { LiteralUnion } from "./utils/types";
 import chalk from "chalk";
@@ -90,14 +91,22 @@ export class ConsoleKit<const TOptions extends ConsoleKitOptions> {
     return this._group;
   }
 
-  log(message: ConsoleKitMessage) {
+  log(message: ConsoleKitMessage): void {
     if (!this._checkShouldLog()) {
-      return this._reset();
+      this._reset();
+      return;
     }
 
-    console.log(`${timestampBuilder()}${message} ${this._filenameBuilder()}`);
+    const optionsToShow = [
+      this._hasTimestamp ? timestampBuilder() : false,
+      this._tagBuilder(),
+      message,
+      this._groupBuilder(),
+    ].filter(Boolean);
 
-    return this._reset();
+    console.log(optionsToShow.join(" "));
+
+    this._reset();
   }
 
   startTime(message?: ConsoleKitMessage) {
@@ -145,6 +154,24 @@ export class ConsoleKit<const TOptions extends ConsoleKitOptions> {
     }
 
     return true;
+  }
+
+  private _tagBuilder() {
+    const tag = this._tag;
+    if (tag === null) return "";
+
+    const tagOptions = (
+      this._options.tags as Record<string, ConsoleKitTagOptions> &
+        ShouldLogConfig
+    )[tag];
+
+    if (tagOptions === undefined) return "";
+
+    const { color, backgroundColor, uppercase } = tagOptions;
+
+    return chalk.hex(color ?? "#00fff2").bgHex(backgroundColor ?? "#001c1b")(
+      `[${uppercase ? tag.toUpperCase() : tag}]`,
+    );
   }
 
   private _filenameBuilder() {

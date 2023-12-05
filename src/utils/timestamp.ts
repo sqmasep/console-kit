@@ -6,5 +6,5 @@ export function getTimestamp(format?: TimestampFormat) {
 }
 
 export function timestampBuilder(format?: TimestampFormat) {
-  return `[${getTimestamp(format)}] `;
+  return `[${getTimestamp(format)}]`;
 }
